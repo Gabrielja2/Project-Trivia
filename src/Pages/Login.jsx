@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { requestToken } from '../Redux/Actions';
 
 class Login extends Component {
     state={
@@ -17,6 +20,17 @@ class Login extends Component {
       return false;
     }
     return true;
+  }
+
+  handleClick = () => {
+    const { actionToken, history } = this.props;
+    actionToken();
+    history.push('./gamepage');
+  }
+
+  handleClickConfig = () => {
+    const { history } = this.props;
+    history.push('./configpage');
   }
 
   render() {
@@ -58,8 +72,28 @@ class Login extends Component {
           Play
 
         </button>
+        <button
+          data-testid="btn-settings"
+          type="button"
+          onClick={ this.handleClickConfig }
+        >
+          Configure
+
+        </button>
       </form>
     );
   }
 }
-export default Login;
+
+const mapDispatchToProps = (dispatch) => ({
+  actionToken: (json) => dispatch(requestToken(json)),
+});
+
+Login.propTypes = {
+  actionToken: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
+
+export default connect(null, mapDispatchToProps)(Login);
