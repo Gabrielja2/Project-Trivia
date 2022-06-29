@@ -1,6 +1,6 @@
 import React from 'react';
 
-class ConfigPage extends React.Component {
+class Config extends React.Component {
   render() {
     return (
       <h1 data-testid="settings-title">Página de configuração</h1>
@@ -8,4 +8,4 @@ class ConfigPage extends React.Component {
   }
 }
 
-export default ConfigPage;
+export default Config;
