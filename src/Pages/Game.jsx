@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../Components/Header';
 
-class GamePage extends React.Component {
+class Game extends React.Component {
   render() {
     return (
       <div>
@@ -11,4 +11,4 @@ class GamePage extends React.Component {
   }
 }
 
-export default GamePage;
+export default Game;

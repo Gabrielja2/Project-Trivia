@@ -27,12 +27,12 @@ class Login extends Component {
     const { name, email } = this.state;
     actionInfo(name, email);
     actionToken();
-    history.push('./gamepage');
+    history.push('./game');
   }
 
   handleClickConfig = () => {
     const { history } = this.props;
-    history.push('./configpage');
+    history.push('./config');
   }
 
   render() {
