@@ -22,11 +22,11 @@ class Login extends Component {
     return true;
   }
 
-  handleClick = () => {
+  handleClick = async () => {
     const { actionToken, history, actionInfo } = this.props;
     const { name, email } = this.state;
     actionInfo(name, email);
-    actionToken();
+    await actionToken();
     history.push('./game');
   }
 
@@ -88,7 +88,7 @@ class Login extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  actionToken: (json) => dispatch(requestToken(json)),
+  actionToken: async (json) => dispatch(requestToken(json)),
   actionInfo: (name, email) => dispatch(getUserInfo(name, email)),
 });
 
