@@ -26,8 +26,8 @@ describe('1 - testando a página de Login', () => {
 
       userEvent.click(buttonPlay)
 
-      const title = screen.getByText(/gamepage/i)
-      expect(title).toBeInTheDocument();
+      const img = screen.getByRole('img', {  name: /profile\-img/i})
+      expect(img).toBeInTheDocument();
     });  
     
     it('1.2 - Testando a funcionabilidade do botão config da página de Login', () => {

@@ -1,9 +1,12 @@
 import React from 'react';
+import Header from '../Components/Header';
 
 class GamePage extends React.Component {
   render() {
     return (
-      <div>gamepage</div>
+      <div>
+        <Header />
+      </div>
     );
   }
 }
