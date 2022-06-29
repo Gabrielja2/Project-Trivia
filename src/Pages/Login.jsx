@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { requestToken } from '../Redux/Actions';
+import { requestToken, getUserInfo } from '../Redux/Actions';
 
 class Login extends Component {
     state={
@@ -23,7 +23,9 @@ class Login extends Component {
   }
 
   handleClick = () => {
-    const { actionToken, history } = this.props;
+    const { actionToken, history, actionInfo } = this.props;
+    const { name, email } = this.state;
+    actionInfo(name, email);
     actionToken();
     history.push('./gamepage');
   }
@@ -87,10 +89,12 @@ class Login extends Component {
 
 const mapDispatchToProps = (dispatch) => ({
   actionToken: (json) => dispatch(requestToken(json)),
+  actionInfo: (name, email) => dispatch(getUserInfo(name, email)),
 });
 
 Login.propTypes = {
   actionToken: PropTypes.func.isRequired,
+  actionInfo: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,

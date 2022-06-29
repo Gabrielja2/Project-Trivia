@@ -1,4 +1,4 @@
-import { LOGIN } from '../Actions';
+import { GET_INFO } from '../Actions';
 
 const INITIAL_STATE = {
   name: '',
@@ -7,9 +7,10 @@ const INITIAL_STATE = {
 
 const userReduce = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-  case LOGIN:
+  case GET_INFO:
     return ({
       ...state,
+      name: action.name,
       email: action.email,
     });
   default:

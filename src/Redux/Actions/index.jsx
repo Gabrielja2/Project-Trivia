@@ -1,16 +1,17 @@
 const END_POINT = 'https://opentdb.com/api_token.php?command=request';
 
-export const LOGIN = 'LOGIN';
+export const GET_INFO = 'GET_INFO';
 export const TOKEN_RESQUEST = 'TOKEN_RESQUEST';
 
-export const LoginUser = (email) => ({
-  type: LOGIN,
-  payload: email,
+export const getUserInfo = (name, email) => ({
+  type: GET_INFO,
+  name,
+  email,
 });
 
 export const tokenRequest = (token) => ({
   type: TOKEN_RESQUEST,
-  payload: token,
+  token,
 });
 
 export const requestToken = () => async (dispatch) => {
