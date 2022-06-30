@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import Header from '../Components/Header';
-import { validationToken } from '../Redux/Actions';
 
 class Game extends React.Component {
   state= {
@@ -47,41 +45,29 @@ class Game extends React.Component {
         {correct}
       </button>,
     );
-    const num = 0.5;
-    return answers.sort(() => (Math.random() - num));
+    return answers;
   }
 
   render() {
     const { questions, index } = this.state;
     const array = this.answersRandom();
+    const shuffle = 0.5;
     console.log(questions);
     return (
       <div>
         <Header />
         <h1 data-testid="question-category">{questions[index].category}</h1>
         <p data-testid="question-text">{questions[index].question}</p>
-        <p data-testid="answer-options">{array}</p>
+        <p data-testid="answer-options">{array.sort(() => (Math.random() - shuffle))}</p>
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
-  validToken: state.userReduce.validToken,
-  questions: state.userReduce.questions,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  actionValidationToken: (json) => dispatch(validationToken(json)),
-});
-
 Game.propTypes = {
-  questions: PropTypes.object,
-  validToken: PropTypes.object,
-  actionValidationToken: PropTypes.func,
   history: PropTypes.shape({
     push: PropTypes.func,
   }),
 }.isRequired;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Game);
+export default Game;
