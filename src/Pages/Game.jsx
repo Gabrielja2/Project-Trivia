@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Header from '../Components/Header';
+import './Game.css';
 
 class Game extends React.Component {
   state= {
     index: 0,
     questions: [{ incorrect_answers: [], category: '', question: [] }],
+    isActive: false,
   }
 
   componentDidMount = async () => {
@@ -23,14 +25,22 @@ class Game extends React.Component {
     }
   }
 
+  handleClick = () => {
+    this.setState({
+      isActive: true,
+    });
+  }
+
   answersRandom = () => {
-    const { index, questions } = this.state;
+    const { index, questions, isActive } = this.state;
     const wrong = questions[index].incorrect_answers;
     const answers = wrong.map((answer, indice) => (
       <button
         data-testid={ `wrong-answer-${indice}` }
         key={ indice }
         type="button"
+        onClick={ this.handleClick }
+        className={ isActive ? 'red' : '' }
       >
         {answer}
       </button>
@@ -41,6 +51,8 @@ class Game extends React.Component {
         data-testid="correct-answer"
         type="button"
         key="correct"
+        onClick={ this.handleClick }
+        className={ isActive ? 'green' : '' }
       >
         {correct}
       </button>,
