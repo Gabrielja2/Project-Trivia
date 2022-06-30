@@ -7,10 +7,20 @@ class Game extends React.Component {
   state= {
     index: 0,
     questions: [{ incorrect_answers: [], category: '', question: [] }],
-    isActive: false,
+    // isActive: false,
+    isDisabled: true,
+    sortedArray: [],
   }
 
   componentDidMount = async () => {
+    const { isDisabled } = this.state;
+    if (isDisabled) {
+      setTimeout(() => {
+        this.setState({
+          isDisabled: false,
+        });
+      }, +'5000');
+    }
     const { history } = this.props;
 
     const token = localStorage.getItem('token');
@@ -21,7 +31,18 @@ class Game extends React.Component {
       localStorage.removeItem('token');
       history.push('/');
     } else {
-      this.setState({ questions: json.results });
+      this.setState({
+        questions: json.results,
+      }, () => this.setState({
+        sortedArray: this.answersRandom(),
+      }));
+    }
+    if (isDisabled) {
+      setTimeout(() => {
+        this.setState({
+          isDisabled: true,
+        });
+      }, +'35000');
     }
   }
 
@@ -31,46 +52,59 @@ class Game extends React.Component {
     });
   }
 
+  changeClassName = (parametro) => {
+    if (parametro) {
+      return 'green';
+    }
+    return 'red';
+  }
+
   answersRandom = () => {
-    const { index, questions, isActive } = this.state;
+    const shuffle = 0.5;
+    const { index, questions } = this.state;
     const wrong = questions[index].incorrect_answers;
     const answers = wrong.map((answer, indice) => (
-      <button
-        data-testid={ `wrong-answer-${indice}` }
-        key={ indice }
-        type="button"
-        onClick={ this.handleClick }
-        className={ isActive ? 'red' : '' }
-      >
-        {answer}
-      </button>
-    ));
+
+      {
+        id: `wrong-answer-${indice}`,
+        isCorrect: false,
+        title: answer,
+      }));
+
     const correct = questions[index].correct_answer;
     answers.push(
-      <button
-        data-testid="correct-answer"
-        type="button"
-        key="correct"
-        onClick={ this.handleClick }
-        className={ isActive ? 'green' : '' }
-      >
-        {correct}
-      </button>,
+      {
+        id: 'correct-answer',
+        isCorrect: true,
+        title: correct,
+      },
     );
-    return answers;
+    return answers.sort(() => (Math.random() - shuffle));
   }
 
   render() {
-    const { questions, index } = this.state;
-    const array = this.answersRandom();
-    const shuffle = 0.5;
-    console.log(questions);
+    const { questions, index, isActive, isDisabled, sortedArray } = this.state;
+    console.log(sortedArray);
     return (
       <div>
         <Header />
         <h1 data-testid="question-category">{questions[index].category}</h1>
         <p data-testid="question-text">{questions[index].question}</p>
-        <p data-testid="answer-options">{array.sort(() => (Math.random() - shuffle))}</p>
+        <p data-testid="answer-options">
+          {sortedArray.map(({ id, isCorrect, title }) => (
+            <button
+              data-testid={ isCorrect ? 'correct-answer' : `wrong-answer-${index}` }
+              type="button"
+              key={ id }
+              onClick={ this.handleClick }
+              className={ isActive ? this.changeClassName(isCorrect) : '' }
+              disabled={ isDisabled }
+            >
+              {title}
+            </button>
+          ))}
+
+        </p>
       </div>
     );
   }
