@@ -7,27 +7,25 @@ class Game extends React.Component {
   state= {
     index: 0,
     questions: [{ incorrect_answers: [], category: '', question: [] }],
-    // isActive: false,
-    isDisabled: true,
+    isActive: false,
+    isDisabled: false,
     sortedArray: [],
   }
 
   componentDidMount = async () => {
     const { isDisabled } = this.state;
-    if (isDisabled) {
-      setTimeout(() => {
-        this.setState({
-          isDisabled: false,
-        });
-      }, +'5000');
-    }
     const { history } = this.props;
-
     const token = localStorage.getItem('token');
     const response = await fetch(`https://opentdb.com/api.php?amount=5&token=${token}`);
     const json = await response.json();
-    const tres = 3;
-    if (json.response_code === tres) {
+    if (!isDisabled) {
+      setTimeout(() => {
+        this.setState({
+          isDisabled: true,
+        });
+      }, +'30000');
+    }
+    if (json.response_code === +'3') {
       localStorage.removeItem('token');
       history.push('/');
     } else {
@@ -36,13 +34,6 @@ class Game extends React.Component {
       }, () => this.setState({
         sortedArray: this.answersRandom(),
       }));
-    }
-    if (isDisabled) {
-      setTimeout(() => {
-        this.setState({
-          isDisabled: true,
-        });
-      }, +'35000');
     }
   }
 
