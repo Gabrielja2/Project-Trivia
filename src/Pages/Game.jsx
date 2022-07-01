@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Header from '../Components/Header';
 import './Game.css';
+import { atualizaScore } from '../Redux/Actions';
 
 const correctAnswer = 'correct-answer';
 
@@ -14,6 +16,7 @@ class Game extends React.Component {
     sortedArray: [],
     score: 0,
     timer: 30,
+    assertions: 0,
   }
 
   componentDidMount = async () => {
@@ -22,7 +25,7 @@ class Game extends React.Component {
     const token = localStorage.getItem('token');
     const response = await fetch(`https://opentdb.com/api.php?amount=5&token=${token}`);
     const json = await response.json();
-    const MAX_TIME_IN_MILISECONDS = 30000;
+    const MAX_TIME_IN_MILISECONDS = 31000;
     const MIN_TIME_IN_MILISECONDS = 1000;
     if (!isDisabled) {
       setTimeout(() => {
@@ -54,15 +57,31 @@ class Game extends React.Component {
   }
 
   handleClick = (event) => {
-    const { score } = this.state;
+    console.log('props', this.props);
+    const { questions, timer, index } = this.state;
+    const { actionScore } = this.props;
+    const difficult = questions[index].difficulty;
+    const CONSTANT = 10;
+    const THREE = 3;
+    const TWO = 2;
+    const ONE = 1;
+    let dificultValue;
+    if (difficult === 'hard') dificultValue = THREE;
+    if (difficult === 'medium') dificultValue = TWO;
+    if (difficult === 'easy') dificultValue = ONE;
     this.setState({
       isActive: true,
     });
     if (event.target.name === correctAnswer) {
-      this.setState({
-        score: +'10' + (score * score + 1),
+      this.setState((prev) => ({
+        score: prev.score + CONSTANT + (timer * dificultValue),
+        assertions: prev.assertions + ONE,
+      }), () => {
+        const { score, assertions } = this.state;
+        actionScore(score, assertions);
       });
     }
+    // console.log(score);
   }
 
   handleNext = () => {
@@ -107,8 +126,6 @@ class Game extends React.Component {
   render() {
     const { questions, index, isActive, isDisabled, sortedArray } = this.state;
     // console.log('sort', sortedArray[index]);
-    const nada = sortedArray[index];
-    console.log('isCorrect', nada);
     return (
       <div>
         <Header />
@@ -143,10 +160,14 @@ class Game extends React.Component {
   }
 }
 
+const mapDispatchToProps = (dispatch) => ({
+  actionScore: (score, assertions) => dispatch(atualizaScore(score, assertions)),
+});
+
 Game.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }),
 }.isRequired;
 
-export default Game;
+export default connect(null, mapDispatchToProps)(Game);

@@ -7,7 +7,7 @@ const INITIAL_STATE = {
   assertions: 0,
 };
 
-const userReduce = (state = INITIAL_STATE, action) => {
+const player = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case GET_INFO:
     return ({
@@ -25,4 +25,4 @@ const userReduce = (state = INITIAL_STATE, action) => {
     return state;
   }
 };
-export default userReduce;
+export default player;
