@@ -1,7 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Header from '../Components/Header';
 import './Game.css';
+import { atualizaScore } from '../Redux/Actions';
+
+const correctAnswer = 'correct-answer';
 
 class Game extends React.Component {
   state= {
@@ -10,6 +14,9 @@ class Game extends React.Component {
     isActive: false,
     isDisabled: false,
     sortedArray: [],
+    score: 0,
+    timer: 30,
+    assertions: 0,
   }
 
   componentDidMount = async () => {
@@ -18,12 +25,14 @@ class Game extends React.Component {
     const token = localStorage.getItem('token');
     const response = await fetch(`https://opentdb.com/api.php?amount=5&token=${token}`);
     const json = await response.json();
+    const MAX_TIME_IN_MILISECONDS = 31000;
+    const MIN_TIME_IN_MILISECONDS = 1000;
     if (!isDisabled) {
       setTimeout(() => {
         this.setState({
           isDisabled: true,
         });
-      }, +'30000');
+      }, MAX_TIME_IN_MILISECONDS);
     }
     if (json.response_code === +'3') {
       localStorage.removeItem('token');
@@ -31,16 +40,13 @@ class Game extends React.Component {
     } else {
       this.setState({
         questions: json.results,
-      }, () => this.setState({
-        sortedArray: this.answersRandom(),
-      }));
+      }, () => this.answersRandom());
     }
-  }
-
-  handleClick = () => {
-    this.setState({
-      isActive: true,
-    });
+    setInterval(() => {
+      this.setState((prev) => ({
+        timer: prev.timer - 1,
+      }));
+    }, MIN_TIME_IN_MILISECONDS);
   }
 
   changeClassName = (parametro) => {
@@ -48,6 +54,47 @@ class Game extends React.Component {
       return 'green';
     }
     return 'red';
+  }
+
+  handleClick = (event) => {
+    console.log('props', this.props);
+    const { questions, timer, index } = this.state;
+    const { actionScore } = this.props;
+    const difficult = questions[index].difficulty;
+    const CONSTANT = 10;
+    const THREE = 3;
+    const TWO = 2;
+    const ONE = 1;
+    let dificultValue;
+    if (difficult === 'hard') dificultValue = THREE;
+    if (difficult === 'medium') dificultValue = TWO;
+    if (difficult === 'easy') dificultValue = ONE;
+    this.setState({
+      isActive: true,
+    });
+    if (event.target.name === correctAnswer) {
+      this.setState((prev) => ({
+        score: prev.score + CONSTANT + (timer * dificultValue),
+        assertions: prev.assertions + ONE,
+      }), () => {
+        const { score, assertions } = this.state;
+        actionScore(score, assertions);
+      });
+    }
+    // console.log(score);
+  }
+
+  handleNext = () => {
+    const { index } = this.state;
+    const { history } = this.props;
+    if (index === +'4') {
+      history.push('/feedback');
+    } else {
+      this.setState((prev) => ({
+        index: prev.index + 1,
+        isActive: false,
+      }), () => this.answersRandom());
+    }
   }
 
   answersRandom = () => {
@@ -65,17 +112,19 @@ class Game extends React.Component {
     const correct = questions[index].correct_answer;
     answers.push(
       {
-        id: 'correct-answer',
+        id: correctAnswer,
         isCorrect: true,
         title: correct,
       },
     );
-    return answers.sort(() => (Math.random() - shuffle));
+    this.setState({
+      sortedArray: answers.sort(() => (Math.random() - shuffle)),
+    });
   }
 
   render() {
     const { questions, index, isActive, isDisabled, sortedArray } = this.state;
-    console.log(sortedArray);
+    // console.log('sort', sortedArray[index]);
     return (
       <div>
         <Header />
@@ -84,22 +133,35 @@ class Game extends React.Component {
         <p data-testid="answer-options">
           {sortedArray.map(({ id, isCorrect, title }) => (
             <button
-              data-testid={ isCorrect ? 'correct-answer' : `wrong-answer-${index}` }
+              data-testid={ isCorrect ? correctAnswer : `wrong-answer-${index}` }
               type="button"
               key={ id }
               onClick={ this.handleClick }
               className={ isActive ? this.changeClassName(isCorrect) : '' }
               disabled={ isDisabled }
+              name={ id }
             >
               {title}
             </button>
           ))}
-
         </p>
+        {isActive && (
+          <button
+            type="button"
+            data-testid="btn-next"
+            onClick={ this.handleNext }
+          >
+            Next
+          </button>
+        )}
       </div>
     );
   }
 }
+
+const mapDispatchToProps = (dispatch) => ({
+  actionScore: (score, assertions) => dispatch(atualizaScore(score, assertions)),
+});
 
 Game.propTypes = {
   history: PropTypes.shape({
@@ -107,4 +169,4 @@ Game.propTypes = {
   }),
 }.isRequired;
 
-export default Game;
+export default connect(null, mapDispatchToProps)(Game);
