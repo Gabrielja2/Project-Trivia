@@ -86,10 +86,9 @@ class Game extends React.Component {
 
   handleNext = () => {
     const { index } = this.state;
+    const { history } = this.props;
     if (index === +'4') {
-      this.setState({
-        index: 0,
-      });
+      history.push('/feedback');
     } else {
       this.setState((prev) => ({
         index: prev.index + 1,
