@@ -14,13 +14,20 @@ class Feedback extends Component {
   }
 
   render() {
-    const { assertions, score } = this.props;
+    const { assertions, score, history } = this.props;
     return (
       <div>
         <Header />
         <span data-testid="feedback-text">{this.checkAsserts()}</span>
         <span data-testid="feedback-total-question">{assertions}</span>
         <span data-testid="feedback-total-score">{ score }</span>
+        <button
+          type="button"
+          data-testid="btn-play-again"
+          onClick={ () => history.push('/') }
+        >
+          Play Again
+        </button>
       </div>
     );
   }
