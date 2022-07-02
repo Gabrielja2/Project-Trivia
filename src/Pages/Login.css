@@ -25,6 +25,12 @@
   min-width: 10rem;
 }
 
+.button-play:hover, .button-config:hover {
+  box-shadow: 1px 1px 5px;
+  position: relative;
+  top: -1px;
+}
+
 label {
   display: flex;
   flex-flow: column wrap;
