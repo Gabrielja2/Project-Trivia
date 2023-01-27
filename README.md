@@ -16,7 +16,7 @@
 <details>
   <summary><strong>:memo: Habilidades</strong></summary><br />
 
-Nesse projeto, você será capaz de:
+Nesse projeto, reforçamos nossa capacidade de:
 
   - Criar um store Redux em aplicações React
 
