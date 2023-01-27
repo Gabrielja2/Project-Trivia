@@ -10,30 +10,27 @@
   - Ser redirecionada, após 5 perguntas respondidas, para a tela de score, onde o texto mostrado depende do número de acertos.
   - Visualizar a página de ranking, se quiser, ao final de cada jogo.
   - Configurar algumas opções para o jogo em uma tela de configuração acessível a partir do cabeçalho do app.
-   <br />
-   
-   Essa aplicação foi desenvolvida em React com manipulação de estados em classes. 
-
-É composta por três filtros de listagem de cartas: filtro por **nome**, por **raridade** e por **Super Trunfo**. Os filtros **nome** e **raridade** são acumulativos. O filtro **Super Trunfo** funciona de forma independente.
-
-O tema do seu baralho é **livre**, então explore a sua criatividade! Mas use seu bom senso para a criação do seu baralho.
+  
+   <br />   
 
 <details>
   <summary><strong>:memo: Habilidades</strong></summary><br />
 
-  Neste projeto, reforçamos nossa capacidade de:
+Nesse projeto, você será capaz de:
 
-  * Ler o estado de um componente e usá-lo para alterar o que exibimos no browser
+  - Criar um store Redux em aplicações React
 
-  * Inicializar um componente, dando a ele um estado pré-definido
+  - Criar reducers no Redux em aplicações React
 
-  * Atualizar o estado de um componente
+  - Criar actions no Redux em aplicações React
 
-  * Capturar eventos utilizando a sintaxe do React
+  - Criar dispatchers no Redux em aplicações React
 
-  * Criar formulários utilizando sintaxe JSX com as tags: `input`, `textarea`, `select`, `form`, `checkbox`
+  - Conectar Redux aos componentes React
 
-  * Transmitir informações de componentes filhos para componentes pais via callbacks
+  - Criar actions assíncronas na sua aplicação React que faz uso de Redux.
+
+  - Escrever testes para garantir que sua aplicação possua uma boa cobertura de testes.
 
 ---
 </details>
